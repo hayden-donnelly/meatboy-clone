@@ -3,15 +3,27 @@ import engine as eng
 
 test_img = None
 
+#TODO: move to engine file
+
+class Rect():
+    x = y = w = h = 0
+
 class Tilemap():
     width = 0
     height = 0
     source = None
     tiles = []
     collision = []
-    
-class Rect():
-    x = y = w = h = 0
+
+# Returns instantiated tilemap
+def init_tilemap(width, height, tiles, collision, src_path):
+    new_tilemap = Tilemap()
+    new_tilemap.width = width
+    new_tilemap.height - height
+    #TODO: load tiles/collision from json
+    new_tilemap.tiles = tiles
+    new_tilemap.collision = collision
+    new_tilemap.source = pygame.image.load(src_path)
 
 class Animations():
     animation_index = 0

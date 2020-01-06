@@ -3,45 +3,6 @@ import engine as eng
 
 test_img = None
 
-#TODO: move to engine file
-
-class Rect():
-    x = y = w = h = 0
-
-class Tilemap():
-    map_width = 0
-    map_height = 0
-    tile_width = 0
-    tile_height = 0
-    source = None
-    tiles = []
-    collision = []
-
-# Returns instantiated tilemap
-def init_tilemap(width, height, tiles, collision, src_path):
-    new_tilemap = Tilemap()
-    new_tilemap.width = width
-    new_tilemap.height - height
-    #TODO: load tiles/collision from json
-    new_tilemap.tiles = tiles
-    new_tilemap.collision = collision
-    new_tilemap.source = pygame.image.load(src_path)
-
-class Animations():
-    animation_index = 0
-    animation_frame_index = 0
-    # Animation frames (images)
-    animations = []
-    # Hitbox frames (rects)
-    hitboxes = []
-    # Hurtbox frames (rects)
-    hurtboxes = []
-
-# Returns instantiated animations
-def init_animations(animations, hitboxes, hurtboxes):
-    new_animations = Animations()
-    #new_animations[0] = pygame.image.load(os.path.join("../assets/tileset.png))
-
 # Base class for all characters
 class Character():
     box_collider = None

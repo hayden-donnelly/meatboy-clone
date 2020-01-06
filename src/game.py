@@ -9,8 +9,10 @@ class Rect():
     x = y = w = h = 0
 
 class Tilemap():
-    width = 0
-    height = 0
+    map_width = 0
+    map_height = 0
+    tile_width = 0
+    tile_height = 0
     source = None
     tiles = []
     collision = []
@@ -81,6 +83,6 @@ def game_update():
     pass
 
 def game_render():
-    eng.screen.blit(test_img, (10, 10))
+    eng.screen.blit(test_img, (10, 10), (10, 10, 16, 16))
     pass
 

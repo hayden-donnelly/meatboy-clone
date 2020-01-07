@@ -7,3 +7,4 @@ def init_rect(x, y, w, h):
     new_rect.y = y
     new_rect.w = w
     new_rect.h = h
+    return new_rect

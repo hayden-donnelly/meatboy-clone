@@ -2,8 +2,7 @@ import math
 import pygame
 import engine as eng
 import rect as rect
-
-#TODO add vec2 class
+import vec2 as vec2
 
 class Tilemap():
     map_width = 0
@@ -12,11 +11,10 @@ class Tilemap():
     tile_height = 0
     tileset_width = 0
     tileset_height = 0
-    # Tileset source
+    # Tileset source img
     source = None
     # Rects for drawing
     src_rect = None
-    dst_rect = None
     # IDs for drawing
     tile_ids = []
     # IDs for collision
@@ -25,7 +23,7 @@ class Tilemap():
 # Returns instantiated tilemap
 def tilemap_init(map_width, map_height, tile_width, tile_height, 
                 tileset_width, tileset_height, tile_ids, 
-                collision, src_path, src_rect, dst_rect):
+                collision, src_path, src_rect):
     new_tilemap = Tilemap()
     new_tilemap.map_width = map_width
     new_tilemap.map_height = map_height
@@ -33,23 +31,73 @@ def tilemap_init(map_width, map_height, tile_width, tile_height,
     new_tilemap.tile_height = tile_height   
     new_tilemap.tileset_width = tileset_width
     new_tilemap.tileset_height = tileset_height
-    #TODO: load tiles/collision from json
     new_tilemap.tile_ids = tile_ids
     new_tilemap.collision = collision
     new_tilemap.source = pygame.image.load(src_path)
     new_tilemap.src_rect = src_rect
-    new_tilemap.dst_rect = dst_rect
     return new_tilemap
 
-def tilemap_collision():
-    pass
+def tilemap_collision(movement_x, movement_y, collider, tilemap):
+
+    movement_sign = vec2.Vec2()
+    movement_sign.x = copysign(1, movement_x)
+    movement_sign.y = copysign(1, movement_y)
+
+    collider_grid_pos1 = vec2.Vec2() # Top left corner
+    collider_grid_pos2 = vec2.Vec2() # Bottom right corner
+    modified_movement = vec2.Vec2()
+
+    # Y Collision
+    # not sure about 'modified_movement_y != 0' dont think I need it
+    while modified_movement_y != movement_y and modified_movement_y != 0:
+        modified_movement.y += movement_sign_y
+
+        # Update collider grid positions
+        collider_grid_pos1.x = (collider.x + modified_movement.x) / tilemap.tile_width
+        collider_gird_pos2.x = (collider.x + modified_movement.x + collider.w) / tilemap.tile_width
+        collider_grid_pos1.y = (collider.y + modified_movement.y) / tilemap.tile_height
+        collider_grid_pos2.y = (collider.y + modified_movement.y + collider_height) / tilemap.tile_height
+
+        if (movement_sign.y < 0 
+        and (tilemap.collision[collider_grid_pos1.y * tilemap.map_width + collider_grid_pos1.x] != 0
+        or tilemap.collision[collider_grid_pos1.y * tilemap.map_width + collider_grid_pos2.x] != 0)):
+            modified_movement.y -= movement_sign.y
+            break
+        elif (movement_sign > 0 
+        and (tilemap.collision[collider_grid_pos2.y * tilemap.map_width + collider_grid_pos1.x] != 0
+        or tilemap.collision[collider_grid_pos2.y * tilemap.map_width + collider_grid_pos2.x] != 0)):
+            modified_movement.y -= move_sign.y
+            break
+
+    # X Collision
+    while modified_movement.x != movement_x and modified_movement_x != 0:
+        modified_moveoment.x += movement_sign_x
+
+        # Update collider grid positions
+        collider_grid_pos1.x = (collider.x + modified_movement.x) / tilemap.tile_width
+        collider_gird_pos2.x = (collider.x + modified_movement.x + collider.w) / tilemap.tile_width
+        collider_grid_pos1.y = (collider.y + modified_movement.y) / tilemap.tile_height
+        collider_grid_pos2.y = (collider.y + modified_movement.y + collider_height) / tilemap.tile_height
+
+        if (movement_sign.x < 0
+        and (tilemap.collision[collider.grid_pos1.y * tilemap.map_width + collider_grid_pos1.x] != 0
+        or tilemap.collision[collider.grid_pos2.y * tilemap.map_width + collider_grid_pos1.x != 0])):
+            modified_movement.x -= movement_sign.x
+            break
+        elif (movement_sign.x > 0
+        and (tilemap.collision[collider.grid_pos1.y * tilemap.map_width + collider_grid_pos2.x] != 0
+        or tilemap.collision[collider.grid_pos2.y * tilemap.map_width + collider_grid_pos2.x != 0])):
+            modified_movement -= movement_sign.x
+            break
+
+    return modified_movement
 
 def tilemap_render(tilemap):
     for x in range(tilemap.map_width):
         for y in range(tilemap.map_height):
             tile_id = tilemap.tile_ids[(y * tilemap.map_width) + x]
+            if tile_id == -1: continue
             tile_x = (int)((tile_id % tilemap.tileset_width) * tilemap.tile_width)
             tile_y = int(math.floor(tile_id / tilemap.tileset_width) * tilemap.tile_width)
             src_rect = [tile_x, tile_y, tilemap.src_rect.w, tilemap.src_rect.h]
-            dst_rect = [x * tilemap.tile_width, y * tilemap.tile_height, tilemap.dst_rect.w, tilemap.dst_rect.h]
             eng.screen.blit(tilemap.source, (x * tilemap.tile_width, y * tilemap.tile_height), src_rect)

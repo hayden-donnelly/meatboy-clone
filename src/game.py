@@ -5,6 +5,8 @@ import animations as anim
 import tilemap as tm
 import character as char
 
+# Tommorrow initialize characters and add input to test tilemap collision
+
 player = None
 enemy = None
 current_tilemap = None

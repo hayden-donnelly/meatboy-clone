@@ -2,7 +2,7 @@ import pygame
 import game as gme
 
 # Global Engine Variables
-screen_width = 500
+screen_width = 1000
 screen_height = 500
 display_caption = "Dark Souls Demake"
 screen = None
@@ -32,7 +32,26 @@ def loop():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 running = False
-                break    
+                break
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_w:
+                    gme.up = True
+                if event.key == pygame.K_s:
+                    gme.down = True
+                if event.key == pygame.K_a:
+                    gme.left = True
+                if event.key == pygame.K_d:
+                    gme.right = True
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_w:
+                    gme.up = False
+                if event.key == pygame.K_s:
+                    gme.down = False
+                if event.key == pygame.K_a:
+                    gme.left = False
+                if event.key == pygame.K_d:
+                    gme.right = False
+
         if running == False:
             break
         

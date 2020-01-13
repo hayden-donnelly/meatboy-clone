@@ -46,18 +46,16 @@ def tilemap_collision(movement_x, movement_y, collider, tilemap):
     collider_grid_pos1 = vec2.Vec2() # Top left corner
     collider_grid_pos2 = vec2.Vec2() # Bottom right corner
     modified_movement = vec2.Vec2()
-
+    #tilemap.tile_width += 1
     # Y Collision
     while modified_movement.y != movement_y and movement_y != 0:
         modified_movement.y += movement_sign.y
 
         # Update collider grid positions
-        collider_grid_pos1.x = (collider.x + modified_movement.x) / tilemap.tile_width
-        collider_grid_pos2.x = (collider.x + modified_movement.x + collider.w) / tilemap.tile_width
-        collider_grid_pos1.y = (collider.y + modified_movement.y) / tilemap.tile_width
-        collider_grid_pos2.y = (collider.y + modified_movement.y + collider.h) / tilemap.tile_width
-
-        print(int(collider_grid_pos2.y * tilemap.map_width + collider_grid_pos2.x))
+        collider_grid_pos1.x = int((collider.x + modified_movement.x) / tilemap.tile_width)
+        collider_grid_pos2.x = int((collider.x + modified_movement.x + collider.w) / tilemap.tile_width)
+        collider_grid_pos1.y = int((collider.y + modified_movement.y) / tilemap.tile_height)
+        collider_grid_pos2.y = int((collider.y + modified_movement.y + collider.h) / tilemap.tile_height)
 
         if (movement_sign.y < 0 
         and (tilemap.collision[int(collider_grid_pos1.y * tilemap.map_width + collider_grid_pos1.x)] != 0
@@ -75,10 +73,10 @@ def tilemap_collision(movement_x, movement_y, collider, tilemap):
         modified_movement.x += movement_sign.x
 
         # Update collider grid positions
-        collider_grid_pos1.x = (collider.x + modified_movement.x) / tilemap.tile_width
-        collider_grid_pos2.x = (collider.x + modified_movement.x + collider.w) / tilemap.tile_width
-        collider_grid_pos1.y = (collider.y + modified_movement.y) / tilemap.tile_width
-        collider_grid_pos2.y = (collider.y + modified_movement.y + collider.h) / tilemap.tile_width
+        collider_grid_pos1.x = int((collider.x + modified_movement.x) / tilemap.tile_width)
+        collider_grid_pos2.x = int((collider.x + modified_movement.x + collider.w) / tilemap.tile_width)
+        collider_grid_pos1.y = int((collider.y + modified_movement.y) / tilemap.tile_height)
+        collider_grid_pos2.y = int((collider.y + modified_movement.y + collider.h) / tilemap.tile_height)
 
         if (movement_sign.x < 0
         and (tilemap.collision[int(collider_grid_pos1.y * tilemap.map_width + collider_grid_pos1.x)] != 0

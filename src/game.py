@@ -4,10 +4,13 @@ import rect as rect
 import animations as anim
 import tilemap as tm
 import character as char
+import vec2 as vec2
 
 player = None
 current_tilemap = None
+camera = None
 
+# Replace with actual input system
 up = False
 down = False
 left = False
@@ -45,6 +48,9 @@ def game_init():
                                         "../assets/bricks2.png", None)
     current_tilemap.src_rect = rect.init_rect(0, 0, current_tilemap.tile_width, current_tilemap.tile_height)
 
+    global camera
+    camera = vec2.Vec2()
+
 def game_update():
     global player
     x = y = 0
@@ -59,8 +65,10 @@ def game_update():
     movement = tm.tilemap_collision(x *5, y *5, player.box_collider, current_tilemap)
     player.box_collider.x += movement.x
     player.box_collider.y += movement.y
+    camera.x = player.box_collider.x
+    camera.y = player.box_collider.y
 
 def game_render():
-    tm.tilemap_render(current_tilemap)
+    tm.tilemap_render(current_tilemap, camera)
     pygame.draw.rect(eng.screen, [255, 0, 0], [player.box_collider.x, player.box_collider.y, player.box_collider.w, player.box_collider.h])
 

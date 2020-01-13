@@ -46,7 +46,7 @@ def tilemap_collision(movement_x, movement_y, collider, tilemap):
     collider_grid_pos1 = vec2.Vec2() # Top left corner
     collider_grid_pos2 = vec2.Vec2() # Bottom right corner
     modified_movement = vec2.Vec2()
-    #tilemap.tile_width += 1
+
     # Y Collision
     while modified_movement.y != movement_y and movement_y != 0:
         modified_movement.y += movement_sign.y
@@ -91,7 +91,7 @@ def tilemap_collision(movement_x, movement_y, collider, tilemap):
 
     return modified_movement
 
-def tilemap_render(tilemap):
+def tilemap_render(tilemap, camera):
     for x in range(tilemap.map_width):
         for y in range(tilemap.map_height):
             tile_id = tilemap.tile_ids[(y * tilemap.map_width) + x]

@@ -99,4 +99,4 @@ def tilemap_render(tilemap, camera):
             tile_x = int((tile_id % tilemap.tileset_width) * tilemap.tile_width)
             tile_y = int(math.floor(tile_id / tilemap.tileset_width) * tilemap.tile_width)
             src_rect = [tile_x, tile_y, tilemap.src_rect.w, tilemap.src_rect.h]
-            eng.screen.blit(tilemap.source, (x * tilemap.tile_width, y * tilemap.tile_height), src_rect)
+            eng.screen.blit(tilemap.source, (x * tilemap.tile_width + camera.x, y * tilemap.tile_height + camera.y), src_rect)

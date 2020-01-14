@@ -2,7 +2,7 @@ import pygame
 import game as gme
 
 # Global Engine Variables
-screen_width = 1000
+screen_width = 500
 screen_height = 500
 display_caption = "Dark Souls Demake"
 screen = None

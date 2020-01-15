@@ -4,7 +4,7 @@ import game as gme
 # Global Engine Variables
 screen_width = 500
 screen_height = 500
-display_caption = "Dark Souls Demake"
+display_caption = "Meatboy"
 screen = None
 running = True
 
@@ -42,6 +42,8 @@ def loop():
                     gme.left = True
                 if event.key == pygame.K_d:
                     gme.right = True
+                if event.key == pygame.K_SPACE:
+                    gme.jump = True
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_w:
                     gme.up = False
@@ -51,6 +53,9 @@ def loop():
                     gme.left = False
                 if event.key == pygame.K_d:
                     gme.right = False
+                if event.key == pygame.K_SPACE:
+                    gme.jump = True
+                    gme.has_jumped = False
 
         if running == False:
             break

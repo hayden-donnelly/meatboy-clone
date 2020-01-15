@@ -6,6 +6,9 @@ import tilemap as tm
 import character as char
 import vec2 as vec2
 
+gravity = 2
+jump_velocity = -50
+
 player = None
 current_tilemap = None
 camera = None
@@ -15,6 +18,8 @@ up = False
 down = False
 left = False
 right = False
+jump = False
+has_jumped = False
 
 def game_init():
     global player
@@ -73,16 +78,17 @@ def game_init():
 
 def game_update():
     global player
+    global has_jumped
     x = y = 0
-    if up == True:
-        y = -1
-    elif down == True:
-        y = 1
+    y += gravity
     if left == True:
         x = -1
     elif right == True:
         x = 1
-    movement = tm.tilemap_collision(x *5, y *5, player.box_collider, current_tilemap)
+    if jump == True and has_jumped != True:
+        has_jumped = True
+        y = jump_velocity
+    movement = tm.tilemap_collision(x *5, y, player.box_collider, current_tilemap)
     player.box_collider.x += movement.x
     player.box_collider.y += movement.y
     camera.x = -player.box_collider.x + (eng.screen_width/2)

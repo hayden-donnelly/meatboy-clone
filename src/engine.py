@@ -54,8 +54,7 @@ def loop():
                 if event.key == pygame.K_d:
                     gme.right = False
                 if event.key == pygame.K_SPACE:
-                    gme.jump = True
-                    gme.has_jumped = False
+                    gme.jump = False
 
         if running == False:
             break

@@ -3,6 +3,7 @@ import pygame
 import engine as eng
 import rect as rect
 import vec2 as vec2
+import movement_info as mi
 
 class Tilemap():
     map_width = 0
@@ -45,6 +46,8 @@ def tilemap_collision(movement_x, movement_y, collider, tilemap):
 
     collider_grid_pos1 = vec2.Vec2() # Top left corner
     collider_grid_pos2 = vec2.Vec2() # Bottom right corner
+    movement_info = mi.Movement_Info()
+    movement_info.movement = vec2.Vec2()
     modified_movement = vec2.Vec2()
 
     # Y Collision
@@ -61,11 +64,13 @@ def tilemap_collision(movement_x, movement_y, collider, tilemap):
         and (tilemap.collision[int(collider_grid_pos1.y * tilemap.map_width + collider_grid_pos1.x)] != 0
         or tilemap.collision[int(collider_grid_pos1.y * tilemap.map_width + collider_grid_pos2.x)] != 0)):
             modified_movement.y -= movement_sign.y
+            movement_info.col_up = True
             break
         elif (movement_sign.y > 0 
         and (tilemap.collision[int(collider_grid_pos2.y * tilemap.map_width + collider_grid_pos1.x)] != 0
         or tilemap.collision[int(collider_grid_pos2.y * tilemap.map_width + collider_grid_pos2.x)] != 0)):
             modified_movement.y -= movement_sign.y
+            movement_info.col_down = True
             break
 
     # X Collision
@@ -82,14 +87,17 @@ def tilemap_collision(movement_x, movement_y, collider, tilemap):
         and (tilemap.collision[int(collider_grid_pos1.y * tilemap.map_width + collider_grid_pos1.x)] != 0
         or tilemap.collision[int(collider_grid_pos2.y * tilemap.map_width + collider_grid_pos1.x)] != 0)):
             modified_movement.x -= movement_sign.x
+            movement_info.col_left = True
             break
         elif (movement_sign.x > 0
         and (tilemap.collision[int(collider_grid_pos1.y * tilemap.map_width + collider_grid_pos2.x)] != 0
         or tilemap.collision[int(collider_grid_pos2.y * tilemap.map_width + collider_grid_pos2.x)] != 0)):
             modified_movement.x -= movement_sign.x
+            movement_info.col_right = True
             break
-
-    return modified_movement
+    
+    movement_info.movement = modified_movement
+    return movement_info
 
 def tilemap_render(tilemap, camera):
     for x in range(tilemap.map_width):

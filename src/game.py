@@ -11,11 +11,18 @@ gravity = 1
 jump_speed = -8
 move_speed = 5
 max_move_speed = 8
-horizontal_wall_jump_speed = 8
+horizontal_wall_jump_speed = 10
 vertical_wall_jump_speed = -10
 forced_move_dir = 0
 forced_move_counter = 0
 forced_move_total_frames = 5
+
+gravity_on_wall = 1
+accel_in_air = 2
+accel_on_ground = 1
+deccel_in_air = 2
+deccel_on_ground = 1
+
 # Movement info from last frame
 movement_info = None
 desired_movement = None
@@ -44,14 +51,14 @@ def game_init():
     global current_tilemap
     tile_ids = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1,
-                1,-1, 1,-1,-1, 5, 5, 5,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1,
                 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1,
                 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1,
                 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1,
                 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1,
-                1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1,
-                1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1,
-                1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1,
+                1,-1,-1,-1,-1,-1,-1, 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1,
+                1,-1,-1,-1,-1,-1,-1, 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1,
+                1,-1,-1,-1,-1,-1,-1, 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1,
+                1,-1,-1,-1,-1,-1,-1, 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1,
                 1,-1,-1,-1,-1,-1,-1, 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1,
                 1,-1,-1,-1,-1,-1,-1, 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1,
                 1,-1,-1,-1,-1,-1,-1, 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1,
@@ -65,14 +72,14 @@ def game_init():
     
     collision = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
                  1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
-                 1,0,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,
                  1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
                  1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
                  1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
                  1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
-                 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
-                 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
-                 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
+                 1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,
+                 1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,
+                 1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,
+                 1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,
                  1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,
                  1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,
                  1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,
@@ -97,27 +104,95 @@ def game_update():
     global forced_move_dir
     global forced_move_counter
 
-    desired_movement.y += gravity
-    if movement_info.col_up == True:
-        desired_movement.y = 0
-    if (left == True and forced_move_dir != 1) or forced_move_dir == -1:
-        desired_movement.x += -move_speed
-    elif (right == True and forced_move_dir != -1) or forced_move_dir == 1:
-        desired_movement.x += move_speed
-    elif movement_info.col_down == True:
-        desired_movement.x = 0
-    if jump == True and movement_info.col_down == True:
-        desired_movement.y = jump_speed
-    elif jump == True and movement_info.col_down == False and movement_info.col_left == True:
-        desired_movement.y = vertical_wall_jump_speed
-        desired_movement.x = horizontal_wall_jump_speed
-        forced_move_dir = 1
-        forced_move_counter = forced_move_total_frames
-    elif jump == True and movement_info.col_down == False and movement_info.col_right == True:
-        desired_movement.y = vertical_wall_jump_speed
-        desired_movement.x = -horizontal_wall_jump_speed
-        forced_move_dir = -1
-        forced_move_counter = forced_move_total_frames
+   # if movement_info.col_up == True:
+   #     desired_movement.y = 0
+   # if (left == True and forced_move_dir != 1) or forced_move_dir == -1:
+   #     desired_movement.x += -move_speed
+   # elif (right == True and forced_move_dir != -1) or forced_move_dir == 1:
+   #     desired_movement.x += move_speed
+   # elif movement_info.col_down == True:
+   #     desired_movement.x = 0
+   # if jump == True and movement_info.col_down == True:
+   #     desired_movement.y = jump_speed
+   # elif jump == True and movement_info.col_down == False and movement_info.col_left == True:
+   #     desired_movement.y = vertical_wall_jump_speed
+   #     desired_movement.x = horizontal_wall_jump_speed
+   #     forced_move_dir = 1
+   #     forced_move_counter = forced_move_total_frames
+   # elif jump == True and movement_info.col_down == False and movement_info.col_right == True:
+   #     desired_movement.y = vertical_wall_jump_speed
+   #     desired_movement.x = -horizontal_wall_jump_speed
+   #     forced_move_dir = -1
+   #     forced_move_counter = forced_move_total_frames
+    # Player Movement
+    # In air
+    if movement_info.col_down == False:
+        # In air touching wall on left side
+        if movement_info.col_left == True:
+            if left == True:
+                desired_movement.y = gravity_on_wall
+            else:
+                desired_movement.y += gravity
+            if jump == True:
+                desired_movement.y = vertical_wall_jump_speed
+                desired_movement.x = horizontal_wall_jump_speed
+            if right == True:
+                desired_movement.x += accel_in_air
+        # In air touching wall on right side
+        elif movement_info.col_right == True:
+            if right == True:
+                desired_movement.y = gravity_on_wall
+            else:
+                desired_movement.y += gravity
+            if jump == True:
+                desired_movement.y = vertical_wall_jump_speed
+                desired_movement.x = -horizontal_wall_jump_speed
+            if left == True:
+                desired_movement.x += -accel_in_air
+        # In air not touching wall
+        else:            
+            # Acceleration
+            desired_movement.y += gravity
+            if left == True:
+                desired_movement.x += -accel_in_air
+            elif right == True:
+                desired_movement.x += accel_in_air
+            # Decceleration
+            elif desired_movement.x < 0:
+                if desired_movement.x + deccel_in_air >= 0:
+                    desired_movement.x = 0
+                else:
+                    desired_movement.x += deccel_in_air
+            elif desired_movement.x > 0:
+                if desired_movement.x - deccel_in_air <= 0:
+                    desired_movement.x = 0
+                else:
+                    desired_movement.x -= deccel_in_air
+    # On Ground
+    else:
+        # Acceleration
+        desired_movement.y = gravity
+        if jump == True:
+            desired_movement.y = jump_speed
+        elif left == True:
+            desired_movement.x += -accel_on_ground
+        elif right == True:
+            desired_movement.x += accel_on_ground
+        # Decceleration
+        # Switch to ground accel/deccel
+        elif desired_movement.x < 0:
+            if desired_movement.x + deccel_in_air >= 0:
+                desired_movement.x = 0
+            else:
+                desired_movement.x += deccel_in_air
+        elif desired_movement.x > 0:
+            if desired_movement.x - deccel_in_air <= 0:
+                desired_movement.x = 0
+            else:
+                desired_movement.x -= deccel_in_air
+        
+
+
     desired_movement.x = max(-max_move_speed, min(desired_movement.x, max_move_speed))
     movement_info = tm.tilemap_collision(desired_movement.x, desired_movement.y, player.box_collider, current_tilemap)
     if forced_move_dir != 0:

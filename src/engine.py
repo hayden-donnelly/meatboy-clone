@@ -43,7 +43,10 @@ def loop():
                 if event.key == pygame.K_d:
                     gme.right = True
                 if event.key == pygame.K_SPACE:
+                    if gme.jump == True and gme.jump_key_released = False:
+                        gme.jump = False
                     gme.jump = True
+                    gme.jump_key_released = False
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_w:
                     gme.up = False
@@ -55,6 +58,7 @@ def loop():
                     gme.right = False
                 if event.key == pygame.K_SPACE:
                     gme.jump = False
+                    gme.jump_key_released = True
 
         if running == False:
             break

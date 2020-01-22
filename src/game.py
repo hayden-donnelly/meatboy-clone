@@ -139,6 +139,7 @@ def game_update():
         
         # Finished level
         if movement_info.col_finish == True:
+            desired_movement = vec2.Vec2()
             if lv.current_level_id + 1 < len(lv.levels):
                 lv.current_level_id += 1
                 player.box_collider.x = lv.levels[lv.current_level_id].start_x

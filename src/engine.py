@@ -4,7 +4,7 @@ import game as gme
 # Global Engine Variables
 screen_width = 500
 screen_height = 500
-display_caption = "Meatboy"
+display_caption = "Meatboy Clone"
 screen = None
 running = True
 
@@ -36,25 +36,33 @@ def loop():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w:
                     gme.up = True
-                if event.key == pygame.K_s:
+                elif event.key == pygame.K_s:
                     gme.down = True
-                if event.key == pygame.K_a:
+                elif event.key == pygame.K_a:
                     gme.left = True
-                if event.key == pygame.K_d:
+                elif event.key == pygame.K_d:
                     gme.right = True
-                if event.key == pygame.K_SPACE:
+                elif event.key == pygame.K_SPACE:
                     gme.jump = True
+                elif event.key == pygame.K_t:
+                    gme.start = True
+                elif event.key == pygame.K_r:
+                    gme.restart = True
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_w:
                     gme.up = False
-                if event.key == pygame.K_s:
+                elif event.key == pygame.K_s:
                     gme.down = False
-                if event.key == pygame.K_a:
+                elif event.key == pygame.K_a:
                     gme.left = False
-                if event.key == pygame.K_d:
+                elif event.key == pygame.K_d:
                     gme.right = False
-                if event.key == pygame.K_SPACE:
+                elif event.key == pygame.K_SPACE:
                     gme.jump = False
+                elif event.key == pygame.K_t:
+                    gme.start = False
+                elif event.key == pygame.K_r:
+                    gme.restart = False
 
         if running == False:
             break

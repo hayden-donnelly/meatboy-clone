@@ -24,15 +24,17 @@ accel_on_ground = 4
 deccel_in_air = 1
 deccel_on_ground = 3
 
-# Movement info from last frame
+# Movement info
 movement_info = None
 desired_movement = None
 
 player = None
 camera = None
+number_of_deaths = 0
 
-start_x = 150
-start_y = 150
+# Fonts
+arial_40 = None
+arial_20 = None
 
 # TODO: replace with actual input system
 up = False
@@ -40,7 +42,8 @@ down = False
 left = False
 right = False
 jump = False
-jump_key_released = False
+start = False
+restart = False
 
 def game_init():
     global player
@@ -55,6 +58,11 @@ def game_init():
     global camera
     camera = vec2.Vec2()
 
+    global arial_40
+    arial_40 = pygame.font.SysFont("Arial", 40, bold=True, italic=False)
+    global arial_20
+    arial_20 = pygame.font.SysFont("Arial", 20, bold=True, italic=False)
+
     # Loads all levels into array
     lv.load_levels()
 
@@ -64,6 +72,7 @@ def game_update():
         global player
         global movement_info
         global desired_movement
+        global number_of_deaths
 
         # Player Movement
         # In air
@@ -148,6 +157,7 @@ def game_update():
                 game_state = 2  # Game Complete
         # PLayer collided with lethal object and was killed
         elif movement_info.col_lethal == True:
+            number_of_deaths += 1
             desired_movement = vec2.Vec2()
             player.box_collider.x = lv.levels[lv.current_level_id].start_x
             player.box_collider.y = lv.levels[lv.current_level_id].start_y
@@ -158,14 +168,19 @@ def game_update():
         # Center camera on player
         camera.x = -player.box_collider.x + (eng.screen_width/2)
         camera.y = -player.box_collider.y + (eng.screen_height/2)
+
+        if restart == True:
+            number_of_deaths = 0
+            game_state = 0
     elif game_state == 0:   # Main Menu
-        if jump == True:
+        if start == True:
             game_state = 1
             lv.current_level_id = 0
             player.box_collider.x = lv.levels[lv.current_level_id].start_x
             player.box_collider.y = lv.levels[lv.current_level_id].start_y
     elif game_state == 2:   # Game Complete
-        if jump == True:
+        if restart == True:
+            number_of_deaths = 0
             game_state = 0
 
 def game_render():
@@ -174,8 +189,32 @@ def game_render():
         tm.tilemap_render(lv.levels[lv.current_level_id].tilemap, camera)
         # Draw player
         pygame.draw.rect(eng.screen, [255, 0, 0], [player.box_collider.x + camera.x, player.box_collider.y + camera.y, player.box_collider.w, player.box_collider.h])
+        # Draw UI
+        text1 = arial_20.render(lv.levels[lv.current_level_id].name, False, (255, 0, 0))    # Level name
+        text2 = arial_20.render("Deaths: " + str(number_of_deaths), False, (255, 0, 0))     # Number of deaths
+        eng.screen.blit(text1, (0,0))
+        eng.screen.blit(text2, (0,20))
     elif game_state == 0:
-        pass
+        text1 = arial_40.render("Meatboy Clone", False, (255, 0, 0))
+        text2 = arial_20.render("A/D to move Left/Right", False, (255, 0, 0))
+        text3 = arial_20.render("Space to Jump", False, (255, 0, 0))
+        text4 = arial_20.render("When aerial & against wall press space to wall jump", False, (255, 0, 0))
+        text5 = arial_20.render("Press T to start", False, (255, 0, 0))
+        text6 = arial_20.render("Press R to restart", False, (255, 0, 0))
+        text7 = arial_20.render("Reach green square to complete level", False, (255, 0, 0))
+        eng.screen.blit(text1, (0,0))
+        eng.screen.blit(text2, (0,50))
+        eng.screen.blit(text3, (0,70))
+        eng.screen.blit(text4, (0,90))
+        eng.screen.blit(text5, (0,110))
+        eng.screen.blit(text6, (0,130))
+        eng.screen.blit(text7, (0,150))
     elif game_state == 2:
+        text1 = arial_40.render("Congratulations!", False, (255, 0, 0))
+        text2 = arial_20.render("You beat the game with " + str(number_of_deaths) + " deaths", False, (255, 0, 0))
+        text3 = arial_20.render("Press R to restart", False, (255, 0, 0))
+        eng.screen.blit(text1, (0,0))
+        eng.screen.blit(text2, (0,50))
+        eng.screen.blit(text3, (0,70))
         pass
 

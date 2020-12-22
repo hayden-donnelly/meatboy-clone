@@ -1,15 +1,5 @@
-# Culminating
-ICS3U Culminating
+## About
 
-run src/main.py to start game
+This is a meatboy 'clone' that I created for my ICS3U (computer science) culminating. Since the class required me to use Python, I ported a bit of C code from an early version of ![Feather Engine](https://github.com/Bizbud/Feather-Engine) and built the rest of the game on top of it.
 
-depending on where you run main.py from you made need to change line 38 in tilemap.py
-from:
-
-```python
-new_tilemap.source = pygame.image.load(os.path.join('../assets/', src_img_name))
-```
-to:
-```python
-new_tilemap.source = pygame.image.load(os.path.join('assets/', src_img_name))
-```
+From the root of the repository, run src/main.py to start the game.
